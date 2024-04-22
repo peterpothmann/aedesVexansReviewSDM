@@ -49,9 +49,7 @@ write.tree(d, "C:/Users/pothmann/tmp/testTree.tree")
 
 d <- read.tree("C:/Users/pothmann/tmp/testTree.tree")
 
-d <-groupClade(d, c(24,25,26,27,28,29))
-
-ggplot(d, aes(color=group)) +
+ggplot(d,) +
   geom_tree()+
   theme_tree() +
   geom_tiplab() +
