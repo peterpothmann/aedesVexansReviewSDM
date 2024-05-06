@@ -4,28 +4,22 @@ library(tidyverse)
 library(readxl)
 library(readODS)
 library(sf)
+library(patchwork)
 
 # set paths
 mainDir <- "C:/Users/pothmann/01-projects/aedesVexansReview/"
 dataDir <- paste0(mainDir, "data/")
 
-# read country data if no centroid geometry is present, create and write one 
-if(!file.exists(paste0(dataDir, "edit/gadm/country_centroids.gpkg"))) {
-  country <- st_read(paste0(dataDir, "raw/gadm/gadm_410-levels.gpkg"), layer = "ADM_0")
-  country <- country |> 
-    st_make_valid() |> 
-    st_centroid()
-  st_write(c, paste0(dataDir, "edit/gadm/country_centroids.gpkg"))
-  }
+# read simplified country data
+#countryBoarder <- st_read(paste0(dataDir, "raw/countries/ne_10m_admin_0_countries"))
 
 # read country boarder data
-countryBoarder <- st_read(paste0(dataDir, "raw/gadm/gadm_410-levels.gpkg"), layer = "ADM_0") |> 
-  st_make_valid() |> 
-  st_simplify(countryBoarder, dTolerance = 10000)
+countryBoarder <- st_read(paste0(dataDir, "raw/gadm/gadm_410-levels.gpkg"), layer = "ADM_0") |>
+  st_make_valid() #|>
+  #st_simplify(countryBoarder, dTolerance = 10000)
 
 # read review data
-reviewTable <- read_ods(paste0(dataDir, "raw/review_aedes_vexans.ods")) |> 
-  filter(is.na(sortOut))
+reviewTable <- read_ods(paste0(dataDir, "raw/review_aedes_vexans.ods"))
 
 # read gbif occurence data
 occurenceData <- read_tsv(paste0(dataDir, "raw/gbif/0202791-240321170329656.csv")) |>
@@ -48,13 +42,23 @@ reviewTable <- reviewTable |>
   summarise(n = n())
 
 mapData <- countryBoarder |> 
-  left_join(reviewTable)
+  left_join(reviewTable, by = join_by(COUNTRY == COUNTRY))
 
-ggplot(mapData) +
+p1 <- ggplot(mapData) +
   geom_sf(aes(fill = n)) +
   scale_fill_viridis_b() +
-  geom_sf(occurenceData, mapping = aes(), color = 'orange', alpha = 0.15 )
+  theme_minimal() +
+  theme(legend.position = "bottom") + 
+  labs(title = "Number of studies per country")
 
+p2 <- ggplot(occurenceData) +
+  geom_sf(mapData, mapping = aes()) + 
+  geom_sf(mapping = aes(), color = 'orange', alpha = 0.5, size = 0.9) +
+  theme_minimal() +
+  labs(title = "GBIF occurence records of Aedes vexans")
+
+p1 /
+p2
 
 # ggplot(mapData) + 
 #   geom_hex(occurenceData, mapping = aes(x = X, y = Y)) +
@@ -70,3 +74,8 @@ ggplot(mapData) +
 #                  contour = F) 
  # geom_sf(data = occurenceData, mapping = aes(), color = "red", alpha = 0.5) + 
   #scale_fill_viridis_b()
+
+
+# mapMetrics
+# % der Studien pro Kontinent (schwierig, da man nicht weiß wo vexans eigentlich vor kommt)
+# % der Studien subnational, national, international 
