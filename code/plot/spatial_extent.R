@@ -34,15 +34,15 @@ occurenceData <- occurenceData |>
   bind_cols(occurenceDataCoordinates)
 
 # clean review data
-reviewTable <- reviewTable |> 
+mapData <- reviewTable |> 
   separate_rows(COUNTRY, sep = ",") |> 
   mutate(COUNTRY = trimws(COUNTRY)) |> 
   distinct(key, COUNTRY, .keep_all = TRUE) |> 
   group_by(COUNTRY) |> 
-  summarise(n = n())
+  summarise(n = n_distinct(COUNTRY))
 
 mapData <- countryBoarder |> 
-  left_join(reviewTable, by = join_by(COUNTRY == COUNTRY))
+  left_join(mapData, by = join_by(COUNTRY == COUNTRY))
 
 p1 <- ggplot(mapData) +
   geom_sf(aes(fill = n)) +
@@ -77,5 +77,16 @@ p2
 
 
 # mapMetrics
+# % der Studien subnational, national, international
+percGeographicLevel <- reviewTable |> 
+  group_by(geographicLevel) |> 
+  summarise(n = n()) |> 
+  mutate(percentage = (n / sum(n)) * 100)
+
 # % der Studien pro Kontinent (schwierig, da man nicht weiß wo vexans eigentlich vor kommt)
-# % der Studien subnational, national, international 
+percContinent <- reviewTable |>
+  separate_rows(continent, sep = ", ") |> 
+  group_by(continent) |> 
+  summarise(n = n()) |> 
+  mutate(percentage = (n / sum(n)) * 100)
+
