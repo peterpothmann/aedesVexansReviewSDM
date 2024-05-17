@@ -15,8 +15,11 @@ reviewTable <- reviewTable |>
   mutate(spatialResolutionKm = as.numeric(spatialResolutionKm)) |> 
   count(spatialResolutionKm)
 
+smallerOneKm <- reviewTable |> 
+  filter(spatialResolutionKm <= 1)
+
+sum(smallerOneKm$n) / sum(reviewTable$n)
+
 ggplot(reviewTable, aes(spatialResolutionKm)) +
   geom_histogram(binwidth = 0.1)+
   geom_freqpoly()
-# gefällt mir nicht so. sollte ich wahrscheinlich eher als text beschreiben 
-  

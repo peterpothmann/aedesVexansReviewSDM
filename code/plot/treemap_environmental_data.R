@@ -8,7 +8,6 @@ library(treemapify)
 library(ggfittext)
 library(ggrepel)
 library(patchwork)
-# klima in wetter umbennen 
 
 
 # set paths
@@ -16,8 +15,7 @@ mainPath <- "C:/Users/pothmann/01-projects/AedesVexansReview/"
 dataPath <- paste0(mainPath, "data/")
 
 # import environmental data
-envData <- read_ods(paste0(dataPath, "raw/environmentalData.ods")) #|> 
-  #filter(bestParameterVexans == "true")
+envData <- read_ods(paste0(dataPath, "raw/environmentalData.ods"))
 
 # prepare data
 envDataAll <- envData |> 
@@ -144,7 +142,7 @@ p2 <- tmPlotRelevantData %>%
     bg.color = "white",
     bg.r = 0.25,
     size = 5,
-    #alpha = 0.5
+    # alpha = 0.5
   ) +
   # expand x-axis limits to make room for test annotations
   scale_x_continuous(limits = c(-0.01, 1.1), expand = c(0, 0)) +
@@ -152,5 +150,4 @@ p2 <- tmPlotRelevantData %>%
   theme_void() +
   labs(title = "Parameters indicated as relevant for the model results (n = 68)")
 
-p1 - p2
-
+p1 + p2
