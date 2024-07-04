@@ -9,9 +9,6 @@
   library(phylobase)
   library(ape)
   
-  # klima in wetter umbennen 
-  
-  
   # set paths
   mainPath <- "C:/Users/pothmann/01-projects/AedesVexansReview/"
   dataPath <- paste0(mainPath, "data/")
