@@ -3,7 +3,6 @@
 library(tidyverse)
 library(readODS)
 
-
 # set paths
 mainPath <- "C:/Users/pothmann/01-projects/AedesVexansReview/"
 dataPath <- paste0(mainPath, "data/")
@@ -43,7 +42,6 @@ metrics <- metrics |>
   add_row(source = "Excluded studies (duplicate removal)",
           NumberOfStudies = nrow(allStudies) - nrow(uniqueStudies)) # here I dont count the unique studies
   
-
 # get the number of studies with relevant title
 relevantTitle <- read_ods(paste0(dataPath, "edit/literature_data/relevant_title.ods"))
 
