@@ -50,3 +50,13 @@ ggplot(data = modelTypePlotTable, aes(x = modelClass, y = n, fill = modelType, l
   scale_fill_hue() +
   theme_bw(base_size = 16) +
   theme(legend.position="none")
+
+s <- sum(modelTypePlotTable$n)
+
+# get percentage of the model type
+metricsModelType <- modelTypePlotTable |> 
+  mutate(perc = n / s * 100)
+
+metricsModelClass <- modelTypePlotTable |> 
+  group_by(modelClass) |> 
+  summarise(perc = sum(n) / s * 100)
