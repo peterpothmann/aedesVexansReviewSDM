@@ -13,6 +13,7 @@ library(patchwork)
 # set paths
 mainPath <- "C:/Users/pothmann/01-projects/AedesVexansReview/"
 dataPath <- paste0(mainPath, "data/")
+plotPath <- "C:/Users/pothmann/01-projects/AedesVexansReview/paper/plots/"
 
 # import environmental data
 envData <- read_ods(paste0(dataPath, "raw/environmentalData.ods"))
@@ -105,8 +106,9 @@ p1 <- tmPlotAllData %>%
   labs(title = "All parameters considered for the model (n = 480)")
 
 # make tree plot for relevant data
+##################################
 
-# change the colr based on the color scheme of tmPlotAllData
+# change the color based on the color scheme of tmPlotAllData
 colorScheme <- tmPlotAllData |> 
   distinct(type_1, type_2, color) 
 
@@ -150,4 +152,12 @@ p2 <- tmPlotRelevantData %>%
   theme_void() +
   labs(title = "Parameters indicated as relevant for the model results (n = 68)")
 
-p1 + p2
+p1  /p2
+
+
+ggsave(filename = "treemap_environmental_params.png",
+       device = "png",
+       path = plotPath,
+       dpi = 600,
+       height = 10,
+       width = 15)
