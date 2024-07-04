@@ -70,7 +70,7 @@ tmPlotRelevantData <- tm$tm %>%
 
 # make tree plot for all data
 
-p1 <- tmPlotAllData %>% 
+plotAllParams <- tmPlotAllData %>% 
   ggplot(aes(xmin = x0, ymin = y0, xmax = x1, ymax = y1)) + 
   geom_rect(aes(fill = color, size = primary_group),
             show.legend = FALSE, color = "black", alpha = .3) +
@@ -117,7 +117,7 @@ tmPlotRelevantData <- tmPlotRelevantData |>
   left_join(colorScheme, by = c("type_1" = "type_1", "type_2" = "type_2"))
 
 
-p2 <- tmPlotRelevantData %>% 
+plotRelevantParams <- tmPlotRelevantData %>% 
   ggplot(aes(xmin = x0, ymin = y0, xmax = x1, ymax = y1)) + 
   geom_rect(aes(fill = color, size = primary_group),
             show.legend = FALSE, color = "black", alpha = .3) +
@@ -152,7 +152,7 @@ p2 <- tmPlotRelevantData %>%
   theme_void() +
   labs(title = "Parameters indicated as relevant for the model results (n = 68)")
 
-p1  /p2
+plotAllParams / plotRelevantParams
 
 
 ggsave(filename = "treemap_environmental_params.png",
