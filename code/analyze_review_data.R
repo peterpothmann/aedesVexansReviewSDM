@@ -73,7 +73,3 @@ metrics <- metrics |>
           NumberOfStudies = excludedStudies) |> 
   add_row(source = "Included Studies (Whole study",
           NumberOfStudies = includedStudies)
-
-
-
-
