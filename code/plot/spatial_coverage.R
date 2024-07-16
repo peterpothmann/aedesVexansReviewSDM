@@ -9,14 +9,15 @@ library(patchwork)
 # set paths
 mainDir <- "C:/Users/pothmann/01-projects/aedesVexansReview/"
 dataDir <- paste0(mainDir, "data/")
-
+plotPath <- paste0(mainDir, "paper/plots/")
+tmpDir <- "C:/Users/pothmann/tmp/"
 # read simplified country data
 #countryBoarder <- st_read(paste0(dataDir, "raw/countries/ne_10m_admin_0_countries"))
 
 # read country boarder data
-countryBoarder <- st_read(paste0(dataDir, "raw/gadm/gadm_410-levels.gpkg"), layer = "ADM_0") |>
-  st_make_valid() #|>
-  #st_simplify(countryBoarder, dTolerance = 10000)
+countryBoarder <- readRDS(paste0(dataDir, "edit/gadm/countries.rds")) |> 
+  select(unit, geom) |> 
+  filter(unit != "Antarctica")
 
 # read review data
 reviewTable <- read_ods(paste0(dataDir, "raw/review_aedes_vexans.ods"))
@@ -38,45 +39,37 @@ mapData <- reviewTable |>
   separate_rows(COUNTRY, sep = ",") |> 
   mutate(COUNTRY = trimws(COUNTRY)) |> 
   distinct(key, COUNTRY, .keep_all = TRUE) |> 
-  group_by(COUNTRY) |> 
-  summarise(n = n_distinct(COUNTRY))
+  count(COUNTRY)
 
 mapData <- countryBoarder |> 
-  left_join(mapData, by = join_by(COUNTRY == COUNTRY))
+  left_join(mapData, by = join_by(unit == COUNTRY))
 
 p1 <- ggplot(mapData) +
   geom_sf(aes(fill = n)) +
   scale_fill_viridis_b() +
   theme_minimal() +
   theme(legend.position = "bottom") + 
-  labs(title = "Number of studies per country")
+  labs(title = "Number of studies per country")+
+  theme(plot.title = element_text(face = "bold"))
 
 p2 <- ggplot(occurenceData) +
   geom_sf(mapData, mapping = aes()) + 
   geom_sf(mapping = aes(), color = 'orange', alpha = 0.5, size = 0.9) +
   theme_minimal() +
-  labs(title = "GBIF occurence records of Aedes vexans")
+  labs(title = "GBIF occurence records of Aedes vexans")+
+  theme(plot.title = element_text(face = "bold"))
 
 p1 /
 p2
 
-# ggplot(mapData) + 
-#   geom_hex(occurenceData, mapping = aes(x = X, y = Y)) +
-#   geom_sf(mapping = aes(color = n)) +
-#   geom_sf(countryBoarder, mapping = aes(), fill = "transparent", color = "black")
+ggsave(filename = "spatial_coverage.png",
+       device = "png",
+       path = plotPath,
+       dpi = 600,
+       height = 8,
+       width = 14)
 
-
-# ggplot() +
-#   geom_sf(data = mapData, mapping = aes(fill = n)) +
-#   stat_density_2d(data = occurenceData, 
-#                  aes(x = X, y = Y, fill = ..density..), 
-#                  geom = 'raster', 
-#                  contour = F) 
- # geom_sf(data = occurenceData, mapping = aes(), color = "red", alpha = 0.5) + 
-  #scale_fill_viridis_b()
-
-
-# mapMetrics
+# get metrics of the map to use in the text to use in the text 
 # % der Studien subnational, national, international
 percGeographicLevel <- reviewTable |> 
   group_by(geographicLevel) |> 
