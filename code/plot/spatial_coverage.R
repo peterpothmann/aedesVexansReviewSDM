@@ -49,14 +49,14 @@ p1 <- ggplot(mapData) +
   scale_fill_viridis_b() +
   theme_minimal() +
   theme(legend.position = "bottom") + 
-  labs(title = "Number of studies per country")+
+  labs(title = "a) Number of studies per country")+
   theme(plot.title = element_text(face = "bold"))
 
 p2 <- ggplot(occurenceData) +
   geom_sf(mapData, mapping = aes()) + 
   geom_sf(mapping = aes(), color = 'orange', alpha = 0.5, size = 0.9) +
   theme_minimal() +
-  labs(title = "GBIF occurence records of Aedes vexans")+
+  labs(title = "b) GBIF occurrence records of Aedes vexans")+
   theme(plot.title = element_text(face = "bold"))
 
 p1 /
@@ -82,4 +82,3 @@ percContinent <- reviewTable |>
   group_by(continent) |> 
   summarise(n = n()) |> 
   mutate(percentage = (n / sum(n)) * 100)
-
