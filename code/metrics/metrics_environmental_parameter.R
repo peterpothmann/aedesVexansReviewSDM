@@ -17,13 +17,14 @@ envDataBestParams <- envData |>
 
 allParams <- envData |> 
   count(category, subcategory, observationPeriod, calculation, sort = TRUE) |> 
-  mutate(perc = n / sum(n) * 100) |> 
-  filter(perc > 2)
-print(xtable(allParams), include.rownames = FALSE, include.colnames = FALSE, sanitize.text.function = I)
+  mutate(perc = n / sum(n) * 100)
+  #filter(perc > 2)
 
 bestParams <- envDataBestParams |> 
   count(category, subcategory, observationPeriod, calculation, sort = TRUE) |> 
-  mutate(perc = n / sum(n) * 100) |> 
-  filter(perc > 2)
+  mutate(perc = n / sum(n) * 100) 
+  #filter(perc > 2)
 
-print(xtable(bestParams), include.rownames = FALSE, include.colnames = FALSE, sanitize.text.function = I)
+t <- envDataBestParams |> 
+  count(observationPeriod) |> 
+  mutate(perc = n / sum(n) * 100)
