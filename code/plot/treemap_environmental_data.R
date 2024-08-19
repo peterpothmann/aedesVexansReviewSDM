@@ -19,18 +19,20 @@ plotPath <- "C:/Users/pothmann/01-projects/AedesVexansReview/paper/plots/"
 envData <- read_ods(paste0(dataPath, "raw/environmentalData.ods"))
 
 # remove two values with No data classification
-envData <- envData |> 
-  filter(subcategory != "-")
+envDataSub <- envData |> 
+  filter(subcategory != "-") |> 
+  filter(subcategory != "unspec.") |> 
+  filter(subcategory != "other")
 
 # make first  letter to upper case
-envData$category <- gsub("^(\\w)(\\w+)", "\\U\\1\\L\\2",
-                         envData$category, perl = TRUE)
+envDataSub$category <- gsub("^(\\w)(\\w+)", "\\U\\1\\L\\2",
+                            envDataSub$category, perl = TRUE)
 
-envData$subcategory <- gsub("^(\\w)(\\w+)", "\\U\\1\\L\\2",
-                            envData$subcategory, perl = TRUE)
+envDataSub$subcategory <- gsub("^(\\w)(\\w+)", "\\U\\1\\L\\2",
+                               envDataSub$subcategory, perl = TRUE)
 
 # prepare data
-envDataAll <- envData |>
+envDataAll <- envDataSub |>
   count(category, subcategory, sort = TRUE) |>
   rename(type_1 = category,
          type_2 = subcategory)
@@ -56,15 +58,17 @@ tmPlotAllData <- tm$tm %>%
   mutate(color = ifelse(is.na(type_2), NA, color))
 
 # prepare data
-envDataRelevant <- envData |>
-  filter(bestParameterVexans == "true") |>
+envDataRelevant <- envDataSub |>
+  filter(bestParameterVexans == "true")
+  
+envDataRelevantAgg <- envDataRelevant |> 
   count(category, subcategory, sort = TRUE) |>
   rename(type_1 = category,
          type_2 = subcategory)
 
 # make tree plot for all
 tm <- treemap(
-  envDataRelevant,
+  envDataRelevantAgg,
   index = c("type_1", "type_2"),
   vSize = "n",
   drop.unused.levels = FALSE
@@ -137,7 +141,8 @@ plotAllParams <- tmPlotAllData %>%
   #scale_y_continuous(expand = c(0, 0)) +
   theme_void(base_size = 15) +
   labs(title = "All used explanatory variables",
-       subtitle = "Total number of observations: n = 480") +
+       subtitle = paste0("Total number of observations: n = ", nrow(envDataSub)),
+       caption = paste0(nrow(envData) - nrow(envDataSub), " values that could not be classified are not shown.")) +
   theme(plot.title = element_text(face = "bold"))
 
 # make tree plot for relevant data
@@ -170,7 +175,7 @@ plotRelevantParams <- tmPlotRelevantData %>%
   scale_size(range = range(tmPlotRelevantData$primary_group)) +
   # make subcategories, normal
   ggrepel::geom_text_repel(
-    data = filter(tmPlotRelevantData, vSize >= 2),
+    data = filter(tmPlotRelevantData, vSize >= 3),
     aes(
       label = type_2,
       x = x,
@@ -178,7 +183,7 @@ plotRelevantParams <- tmPlotRelevantData %>%
     direction = "y") +
   # pick out observations that are smaller and annotate with geom_text_repel
   ggrepel::geom_text_repel(
-    data = filter(tmPlotRelevantData, vSize < 2),
+    data = filter(tmPlotRelevantData, vSize < 3),
     aes(
       x = x,
       y = y,
@@ -210,8 +215,8 @@ plotRelevantParams <- tmPlotRelevantData %>%
   #scale_y_continuous(expand = c(0, 0)) +
   theme_void(base_size = 15) +
   labs(title = "Explanatory variables indicated as relevant for the model results",
-       subtitle = "Total number of observations: n = 68",
-       caption = "Removed two values with 'No Data' land use classes") +
+       subtitle = paste0("Total number of observations: n = ", nrow(envDataRelevant)),
+       caption = "One values that could not be classified are not shown.") +
   theme(plot.title = element_text(face = "bold"))
 
 plotAllParams / plotRelevantParams
@@ -220,8 +225,8 @@ ggsave(
   filename = "treemap_environmental_params.png",
   device = "png",
   path = plotPath,
-  dpi = 600,
-  height = 11,
-  width = 12
+  dpi = 900,
+  height = 9,
+  width = 11
 )
   
