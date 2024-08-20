@@ -1,4 +1,4 @@
-# test treemap plot
+# treemap plot
 # plot to create a tree based on environmental data classification
 
 library(tidyverse)
@@ -8,7 +8,6 @@ library(treemapify)
 library(ggfittext)
 library(ggrepel)
 library(patchwork)
-
 
 # set paths
 mainPath <- "C:/Users/pothmann/01-projects/AedesVexansReview/"
@@ -53,7 +52,7 @@ tmPlotAllData <- tm$tm %>%
   mutate(x = (x0 + x1) / 2,
          y = (y0 + y1) / 2) %>%
   # mark primary groupings and set boundary thickness
-  mutate(primary_group = ifelse(is.na(type_2), 1.2, .5)) %>%
+  mutate(primary_group = ifelse(is.na(type_2), 1.6, .5)) %>%
   # remove colors from primary groupings (since secondary is already colored)
   mutate(color = ifelse(is.na(type_2), NA, color))
 
@@ -82,7 +81,7 @@ tmPlotRelevantData <- tm$tm %>%
   mutate(x = (x0 + x1) / 2,
          y = (y0 + y1) / 2) %>%
   # mark primary groupings and set boundary thickness
-  mutate(primary_group = ifelse(is.na(type_2), 1.2, .5)) %>%
+  mutate(primary_group = ifelse(is.na(type_2), 1.6, .5)) %>%
   # remove colors from primary groupings (since secondary is already colored)
   mutate(color = ifelse(is.na(type_2), NA, color))
 
@@ -104,13 +103,14 @@ plotAllParams <- tmPlotAllData %>%
   scale_fill_identity() +
   scale_size(range = range(tmPlotAllData$primary_group)) +
   # make subcategories, normal
-  ggrepel::geom_text_repel(data = filter(tmPlotAllData, vSize >= 5),
-                           aes(label = type_2,
-                               x = x,
-                               y = y),
-                           direction = "y") +
+  geom_text_repel(data = filter(tmPlotAllData, vSize >= 5),
+                  aes(label = type_2,
+                  x = x,
+                  y = y),
+                  direction = "y",
+                  seed = 1) +
   # pick out observations that are smaller and annotate with geom_text_repel
-  ggrepel::geom_text_repel(
+  geom_text_repel(
     data = filter(tmPlotAllData, vSize < 5),
     aes(
       x = x,
@@ -121,7 +121,8 @@ plotAllParams <- tmPlotAllData %>%
     xlim = c(1.02, NA),
     size = 4,
     direction = "y",
-    force = 1
+    force = 1,
+    seed = 1
   ) +
   # make main categories
   # ggfittext::geom_fit_text(data = filter(tm_plot_data, is.na(color)),
@@ -134,6 +135,7 @@ plotAllParams <- tmPlotAllData %>%
     bg.color = "white",
     bg.r = 0.25,
     size = 4,
+    seed = 7
     #alpha = 0.5
   ) +
   # expand x-axis limits to make room for test annotations
@@ -180,7 +182,8 @@ plotRelevantParams <- tmPlotRelevantData %>%
       label = type_2,
       x = x,
       y = y),
-    direction = "y") +
+    direction = "y",
+    seed = 3) +
   # pick out observations that are smaller and annotate with geom_text_repel
   ggrepel::geom_text_repel(
     data = filter(tmPlotRelevantData, vSize < 3),
@@ -193,20 +196,22 @@ plotRelevantParams <- tmPlotRelevantData %>%
     xlim = c(1.02, NA),
     size = 4,
     direction = "y",
-    force = 1
+    force = 1,
+    seed = 1
   ) +
   # make main categories
   # ggfittext::geom_fit_text(data = filter(tm_plot_data, is.na(color)),
   #                          aes(label = type_1),
   #                          place = "top")+
   # make a halo of the main categories
-  ggrepel::geom_text_repel(
+  geom_text_repel(
     data = filter(tmPlotRelevantData, is.na(color)),
     aes(x = x, y = y, label = type_1),
     bg.color = "white",
     bg.r = 0.25,
     size = 4,
-    direction = "y"
+    direction = "y",
+    seed = 1
     #nudge_y = 0.09
     #alpha = 0.5
   ) +

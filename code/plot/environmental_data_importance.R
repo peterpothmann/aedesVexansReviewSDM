@@ -2,14 +2,13 @@ library(tidyverse)
 library(readODS)
 library(ggrepel)
 
-
 # set paths
 mainPath <- "C:/Users/pothmann/01-projects/AedesVexansReview/"
 dataPath <- paste0(mainPath, "data/")
 plotPath <- paste0(mainDir, "paper/plots/")
 
 # import environmental data
-envData <- read_ods(paste0(dataPath, "raw/environmentalData.ods"))s
+envData <- read_ods(paste0(dataPath, "raw/environmentalData.ods"))
 
 data <- envData |> 
   filter(bestParameterVexans == "true" | bestParameterVexans == "false") |> 
@@ -50,8 +49,8 @@ ggplot(combine, aes(perc, allStand, label = label)) +
                    point.padding = 0.2,
                    box.padding = 0.45,
                    label.padding = 0.19) +
-  xlab("Proportion of studies identifying parameter as important") +
-  ylab("Standardised number of uses") +
+  xlab("Proportion of studies flagging parameter as important vs. total usage") +
+  ylab("Number of uses (max. Standardisation)") +
   labs() +
   theme(text = element_text(size = 14))
 
