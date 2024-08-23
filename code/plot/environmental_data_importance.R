@@ -49,8 +49,8 @@ ggplot(combine, aes(perc, allStand, label = label)) +
                    point.padding = 0.2,
                    box.padding = 0.45,
                    label.padding = 0.19) +
-  xlab("Proportion of studies flagging parameter as important vs. total usage") +
-  ylab("Number of uses (max. Standardisation)") +
+  xlab("Proportion of studies using the variable and flagging it as important") +
+  ylab("Number of uses (max. standardisation)") +
   labs() +
   theme(text = element_text(size = 14))
 
