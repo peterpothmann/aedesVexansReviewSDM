@@ -1,3 +1,7 @@
+# plot 
+# vizualze four field importance matrix
+
+# init library
 library(tidyverse)
 library(readODS)
 library(ggrepel)
@@ -10,6 +14,7 @@ plotPath <- paste0(mainDir, "paper/plots/")
 # import environmental data
 envData <- read_ods(paste0(dataPath, "raw/environmentalData.ods"))
 
+# transform data
 data <- envData |> 
   filter(bestParameterVexans == "true" | bestParameterVexans == "false") |> 
   filter(subcategory != "-") |> 
@@ -17,10 +22,11 @@ data <- envData |>
   count(category, subcategory, sort = TRUE) |> 
   rename("all" = n)
 
+# make a tibble with the important parameters & count 
 important <- envData |> 
   filter(bestParameterVexans == "true") |> 
   filter(subcategory != "-") |> 
-  distinct(author, category, subcategory, .keep_all = TRUE) |> # deswegen werden es weniger
+  distinct(author, category, subcategory, .keep_all = TRUE) |> # here i will get less n beacause i get only the unique ones
   count(category, subcategory, sort = TRUE) |> 
   rename("important" = n)
 

@@ -1,6 +1,7 @@
 # treemap plot
-# plot to create a tree based on environmental data classification
+# plot to create a tree map based on the environmental data classification
 
+# init library
 library(tidyverse)
 library(readODS)
 library(treemap)
@@ -224,14 +225,15 @@ plotRelevantParams <- tmPlotRelevantData %>%
        caption = "One values that could not be classified are not shown.") +
   theme(plot.title = element_text(face = "bold"))
 
-plotAllParams / plotRelevantParams
+plotAllParams
+#plotAllParams / plotRelevantParams
 
 ggsave(
   filename = "treemap_environmental_params.png",
   device = "png",
   path = plotPath,
   dpi = 900,
-  height = 9,
-  width = 11
+  height = 6,
+  width = 9
 )
   
