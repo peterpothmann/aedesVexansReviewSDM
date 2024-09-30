@@ -62,13 +62,3 @@ ggsave(filename = "model_type.png",
        dpi = 600,
        height = 10,
        width = 15)
-
-sumModelTypes <- sum(modelTypePlotTable$n)
-
-# get percentage of the model type
-metricsModelType <- modelTypePlotTable |> 
-  mutate(perc = n / sumModelTypes * 100)
-
-metricsModelClass <- modelTypePlotTable |> 
-  group_by(modelClass) |> 
-  summarise(perc = sum(n) / sumModelTypes * 100)

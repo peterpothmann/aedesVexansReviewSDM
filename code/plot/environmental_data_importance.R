@@ -30,12 +30,37 @@ important <- envData |>
   count(category, subcategory, sort = TRUE) |> 
   rename("important" = n)
 
-combine <- left_join(data, important, by = c("category", "subcategory")) |> 
+# artifical clases - not on final plot
+# reviewData <- read_ods(paste0(dataPath, "raw/review_aedes_vexans.ods")) |> 
+#   select(key, colinearityAcoounted) 
+# 
+# arti <- envData |> 
+#   filter(subcategory == "artificial") |> 
+#   left_join(reviewData) |> 
+#   rowwise() |> 
+#   mutate(subcategory = paste(subcategory, colinearityAcoounted, collapse = "-"))
+# 
+# artiAll <- arti |> 
+#   filter(bestParameterVexans == "true" | bestParameterVexans == "false") |> 
+#   count(category, subcategory) |> 
+#   rename("all" = n)
+# 
+# artiBest <- arti |> 
+#   filter(bestParameterVexans == "true") |> 
+#   count(category, subcategory) |> 
+#   rename("important" = n)
+# 
+# artiCombine <- left_join(artiAll, artiBest)
+
+# combine and create statistics
+combine <- left_join(data, important, by = c("category", "subcategory")) |>
+#  bind_rows(artiCombine) |> 
   replace_na(list(important = 0)) |> 
   mutate(perc = important / all) |> 
   mutate(allStand = {(all-min(all))/(max(all)-min(all))},
          label = paste0(category, "-", subcategory)) 
 
+# plot
 ggplot(combine, aes(perc, allStand, label = label)) +
   theme_minimal() + 
   annotate("rect", xmin=-0, xmax=0.5, ymin=-0, ymax=0.5, fill="#CC79A7", alpha=0.3) +
