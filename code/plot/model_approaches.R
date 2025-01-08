@@ -9,37 +9,10 @@ dataDir <- paste0(mainDir, "data/")
 plotPath <- paste0(mainDir, "paper/plots/")
 tmpDir <- "C:/Users/pothmann/tmp/"
 
-# import environmental data
+# import review data
 reviewData <- read_ods(paste0(dataPath, "raw/review_aedes_vexans.ods"))
 
-# separete rows of modelTypes
-modelTypeTable <- reviewData |>
-  select(modelType, modelApproaches) |>
-  separate_rows(modelType, sep = ',') |>
-  mutate(modelType = trimws(modelType),
-         #modelType = tolower(modelType),
-         modelType = case_when(modelType == "random forests" ~ "random forest",
-                               modelType == "Logisitic regression model" ~ "Logistic regression",
-                               .default = modelType))
-
-# dichtotomisierung ist bei Modellen meistens ein Problem, weil es einen Grenzbereich gibt
-# knowledge-driven to occurrence data-driven 
-# occurrence daten in data - driven umbennen
-# alle sind occurrence driven
-# modelle versucht man in knowledge und data-driven zu unterscheiden
-
-# wollen sagen, dass Wissen wenig berücksichtigt wird
-# nicht einfach nur alles reinklatschen was geht sondern vorher Gedanken machen
-
-modelTypeTable <- modelTypeTable |> 
-  mutate(modelClass = case_when(
-    grepl("Maxent", modelType) ~ "Maximum entropy model",
-    grepl("Logistic regression|Generalized linear mixed model", modelType) ~ "Regression models",
-    grepl("Boosted Regression Trees|Random forest|XGBoost", modelType) ~ "Tree-based models",
-    grepl("Polynomial distributed lag models|Non Linear Discriminant Analysis|Genetic Algorithm for Rule Set Production", modelType) ~ "Nonlinear predictive models",
-    grepl("Custom|ZPOMs", modelType) ~ "Custom models",
-    grepl("Stochastic partial differential equation|Simple kriging", modelType) ~ "Geostatistic models"
-  )) |> 
+modelTypeTable <- reviewData |> 
   count(modelApproaches, modelClass)
 
 modelTypeTable$modelApproaches = factor(modelTypeTable$modelApproaches, levels = c("knowledge driven", "expert derived", "hybrid predictive", "data driven"), ordered = TRUE)

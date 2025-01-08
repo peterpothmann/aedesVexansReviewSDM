@@ -17,7 +17,7 @@ envData <- read_ods(paste0(dataPath, "raw/environmentalData.ods"))
 # transform data
 data <- envData |> 
   filter(bestParameterVexans == "true" | bestParameterVexans == "false") |> 
-  filter(subcategory != "-") |> 
+  filter(subcategory != "-" | subcategory == "unspec.") |> 
   distinct(author, category, subcategory, .keep_all = TRUE) |> 
   count(category, subcategory, sort = TRUE) |> 
   rename("all" = n)

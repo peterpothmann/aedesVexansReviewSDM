@@ -21,8 +21,7 @@ envData <- read_ods(paste0(dataPath, "raw/environmentalData.ods"))
 # remove two values with No data classification
 envDataSub <- envData |> 
   filter(subcategory != "-") |> 
-  filter(subcategory != "unspec.") |> 
-  filter(subcategory != "other")
+  filter(subcategory != "unspec.")
 
 # make first  letter to upper case
 envDataSub$category <- gsub("^(\\w)(\\w+)", "\\U\\1\\L\\2",
