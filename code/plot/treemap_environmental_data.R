@@ -142,9 +142,9 @@ plotAllParams <- tmPlotAllData %>%
   scale_x_continuous(limits = c(-0.01, 1.1), expand = c(0, 0)) +
   #scale_y_continuous(expand = c(0, 0)) +
   theme_void(base_size = 15) +
-  labs(title = "All used explanatory variables",
-       subtitle = paste0("Total number of observations: n = ", nrow(envDataSub)),
-       caption = paste0(nrow(envData) - nrow(envDataSub), " values that could not be classified are not shown.")) +
+  # labs(title = "All used explanatory variables",
+  #      subtitle = paste0("Total number of observations: n = ", nrow(envDataSub)),
+  #      caption = paste0(nrow(envData) - nrow(envDataSub), " values that could not be classified are not shown.")) +
   theme(plot.title = element_text(face = "bold"))
 
 # make tree plot for relevant data
