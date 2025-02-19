@@ -1,6 +1,6 @@
-# README: Repository for the Scientific Article [Article Title Goes Here]
+# README
 
-This repository contains the code used for the scientific article titled **[Article Title Goes Here]**. The following sections outline the structure of the repository and provide a brief description of its contents.
+This repository contains the code used for the scientific article titled **Reviewing Species Distribution Models for Aedes vexans (Diptera: Culicidae): Systematic Analysis of Input Variables, Output Relevance, and Challenges of Ecological Niche Modelling**. The following sections outline the structure of the repository and provide a brief description of its contents.
 
 ## Folder Structure
 
