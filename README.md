@@ -1,6 +1,6 @@
 # README
 
-This repository contains the code used for the scientific article titled **Systematic Literature Review of Species Distribution Models for \textit{Aedes vexans} (Diptera: Culicidae): An Approach to Select Environmental Input Variables**. The following sections outline the structure of the repository and provide a brief description of its contents.
+This repository contains the code used for the scientific article titled **Systematic Literature Review of Species Distribution Models for Aedes vexans (Diptera: Culicidae): An Approach to Select Environmental Input Variables**. The following sections outline the structure of the repository and provide a brief description of its contents.
 
 ## Folder Structure
 
